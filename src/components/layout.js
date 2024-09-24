@@ -1,14 +1,36 @@
 import * as React from 'react'
-import Layout from '../components/layout'
+import { Link } from 'gatsby'
+import {
+  container,
+  heading,
+  navLinks,
+  navLinkItem,
+  navLinkText
+} from './layout.module.css'
 
-const AboutPage = () => {
+const Layout = ({ pageTitle, children }) => {
   return (
-    <Layout pageTitle="About Me">
-      <p>Hi there! I'm the proud creator of this site, which I built with Gatsby.</p>
-    </Layout>
+    <div className={container}>
+      <nav>
+        <ul className={navLinks}>
+          <li className={navLinkItem}>
+            <Link to="/" className={navLinkText}>
+              Home
+            </Link>
+          </li>
+          <li className={navLinkItem}>
+            <Link to="/about" className={navLinkText}>
+              About
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <main>
+        <h1 className={heading}>{pageTitle}</h1>
+        {children}
+      </main>
+    </div>
   )
 }
 
-export const Head = () => <title>About Me</title>
-
-export default AboutPage
+export default Layout
