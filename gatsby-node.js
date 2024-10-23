@@ -3,7 +3,7 @@ const path = require("path");
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions;
 
-  // Query for the recipes with media images and instructions
+  // Query for recipes and articles with media images and instructions
   const result = await graphql(`
     {
       Drupal {
@@ -38,17 +38,48 @@ exports.createPages = async ({ graphql, actions }) => {
             }
           }
         }
+        nodeArticles(first: 100) {
+          edges {
+            node {
+              id
+              title
+              author {
+                displayName
+              }
+              body {
+                summary
+                format
+                processed
+                value
+              }
+              mediaImage {
+                mediaImage {
+                  height
+                  styles {
+                    height
+                    style
+                    url
+                    width
+                  }
+                  url
+                  width
+                }
+              }
+            }
+          }
+        }
       }
     }
   `);
 
-  // Define the template for recipe pages
+  // Define the templates for recipes and articles
   const recipeTemplate = path.resolve(`src/templates/recipe-template.js`);
+  const articleTemplate = path.resolve(`src/templates/article-template.js`);
 
   // Check for any errors in the GraphQL result
   if (result.errors) {
     console.error(result.errors);
-    throw new Error("Error fetching recipes from GraphQL.");
+    throw new Error("Error fetching data from GraphQL.");
   }
 
   // Create pages for each recipe node
@@ -61,12 +92,28 @@ exports.createPages = async ({ graphql, actions }) => {
         title: node.title,
         numberOfServings: node.numberOfServings,
         preparationTime: node.preparationTime,
-        ingredients: node.ingredients || [], // Default to empty array if undefined
+        ingredients: node.ingredients || [],
         cookingTime: node.cookingTime,
         difficulty: node.difficulty,
-        mediaImage: node.mediaImage?.mediaImage || {}, // Get media image data
-        recipeInstruction: node.recipeInstruction?.processed || "", // Add instructions
+        mediaImage: node.mediaImage?.mediaImage || {},
+        recipeInstruction: node.recipeInstruction?.processed || "",
+      },
+    });
+  });
+
+  // Create pages for each article node
+  result.data.Drupal.nodeArticles.edges.forEach(({ node }) => {
+    createPage({
+      path: `/article/${node.id}`,
+      component: articleTemplate,
+      context: {
+        id: node.id,
+        title: node.title,
+        author: node.author?.displayName || "Unknown",
+        body: node.body?.processed || "",
+        mediaImage: node.mediaImage?.mediaImage || {},
       },
     });
   });
 };
+
