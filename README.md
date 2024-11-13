@@ -1,49 +1,73 @@
-<p align="center">
-  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby Minimal Starter
-</h1>
+# Gatsby Project: Blog & Recipe Site 🚀
 
-## 🚀 Quick start
+This is a dynamic Gatsby site crafted as part of my Senior Seminar course at Eastern Kentucky University! With Docker, GraphQL, and automated deployment, this project delivers a seamless blog and recipe experience powered by modern web technologies.
 
-1.  **Create a Gatsby site.**
+## 🗂️ Overview
+This site combines blog posts and recipe content through APIs, making it an ideal setup for managing diverse, content-rich pages. Key features include SEO optimization, a scalable architecture, and an automated CI/CD pipeline.
 
-    Use the Gatsby CLI to create a new site, specifying the minimal starter.
+## Table of Contents
+1. [Setup Instructions](#setup-instructions)
+2. [Project Highlights](#project-highlights)
+3. [Tech Stack](#tech-stack)
+4. [Working with Content](#working-with-content)
+5. [Testing Procedures](#testing-procedures)
+6. [Deployment Process](#deployment-process)
 
-    ```shell
-    # create a new Gatsby site using the minimal starter
-    npm init gatsby
-    ```
+## 🛠️ Setup Instructions
+Here’s a quick guide to running the project locally:
 
-2.  **Start developing.**
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yash5396/csc496project.git
+   
+2. **Navigate to the project directory**:
+   ```bash
+   cd my-first-gatsby-site
+   ```
 
-    Navigate into your new site’s directory and start it up.
+3. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-    ```shell
-    cd my-gatsby-site/
-    npm run develop
-    ```
+4. **Start the development server**:
+   ```bash
+   gatsby develop
+   ```
 
-3.  **Open the code and start customizing!**
+## 🎨 Project Highlights
 
-    Your site is now running at http://localhost:8000!
+- Content-Driven Design: Fetches data dynamically for blog posts and recipes.
+- SEO Ready: Uses a flexible Seo component for improved visibility on search engines.
+- Containerized with Docker: Easy to deploy, maintain, and replicate across environments.
+- Easy Blog Management: Write blog posts in .mdx files and add them to the /blog directory for instant publishing.
 
-    Edit `src/pages/index.js` to see your site update in real-time!
+## 💻 Tech Stack
 
-4.  **Learn more**
+- Gatsby for static site generation and dynamic routing.
+- GraphQL to manage and query data.
+- Docker for deploying in consistent, portable environments.
+- GitHub Actions for automated CI/CD processes.
+  
+## 📄 Working with Content
+- To add new blog posts, create a new folder within /blog. Each folder represents a separate blog entry, making content updates straightforward and manageable.
 
-    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Tutorials](https://www.gatsbyjs.com/docs/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Guides](https://www.gatsbyjs.com/docs/how-to/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
-    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
+## 🔍 Testing Procedures
+This project includes a suite of tests to ensure quality and stability. Run tests with:
 
-## 🚀 Quick start (Netlify)
+```bash
+npm test
+```
 
-Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
+## Components Tested
+- SEO Component: Ensures correct metadata for all pages.
+- Mock Data: Tests data-driven components, like recipe ingredients.
+- Collections: Validates the structure of content collections, such as articles.
+## 🚀 Deployment Process
+This project deploys automatically with GitHub Actions:
 
-[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-minimal)
+- Push code to the main branch.
+- GitHub Actions runs tests, builds the project, and deploys it.
+- The Docker container is updated on student10.wendell.tech, enabling smooth, zero-downtime updates.
+
+
