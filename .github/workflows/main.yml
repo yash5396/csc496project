@@ -1,0 +1,64 @@
+name: Deploy to SSH Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Gatsby site
+        run: npm run build
+
+      - name: Deploy build to SSH server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # Create a new deployment directory with a timestamp
+          TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          NEW_DEPLOY_DIR="html_$TIMESTAMP"
+          ssh -o StrictHostKeyChecking=no student10@student10.wendell.tech "mkdir -p $NEW_DEPLOY_DIR"
+          
+          # Upload build to the new deployment directory
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./public/ student10@student10.wendell.tech:$NEW_DEPLOY_DIR
+      - name: Run Docker Compose on SSH server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no student10@student10.wendell.tech << 'EOF'
+          # Define symlinks and paths
+          NEW_DIR=$NEW_DEPLOY_DIR
+          CURRENT_LINK="html"
+          TEMP_LINK="html_temp"
+          # Check if Docker container is running and start if needed
+          if ! docker ps | grep -q my_container_name; then
+            docker compose up -d --build
+          fi
+          # Point temp symlink to the new directory, then atomically replace current link
+          ln -sfn $NEW_DIR $TEMP_LINK
+          mv -Tf $TEMP_LINK $CURRENT_LINK
+          # Restart Docker Compose with the new build
+          cd html
+          docker compose down
+          docker compose up -d --build
+          # Cleanup old deployment directories except the new one
+          find . -maxdepth 1 -type d -name 'html_*' ! -name "$NEW_DEPLOY_DIR" -exec rm -rf {} +
+          EOF
